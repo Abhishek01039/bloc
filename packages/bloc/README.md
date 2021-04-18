@@ -16,7 +16,7 @@
 <a href="https://github.com/Solido/awesome-flutter#standard"><img src="https://img.shields.io/badge/awesome-flutter-blue.svg?longCache=true" alt="Awesome Flutter"></a>
 <a href="https://fluttersamples.com"><img src="https://img.shields.io/badge/flutter-samples-teal.svg?longCache=true" alt="Flutter Samples"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
-<a href="https://discord.gg/Hc5KD3g"><img src="https://img.shields.io/discord/649708778631200778.svg?logo=discord&color=blue" alt="Discord"></a>
+<a href="https://discord.gg/bloc"><img src="https://img.shields.io/discord/649708778631200778.svg?logo=discord&color=blue" alt="Discord"></a>
 <a href="https://github.com/felangel/bloc"><img src="https://tinyurl.com/bloc-library" alt="Bloc Library"></a>
 </p>
 
@@ -34,6 +34,27 @@ This package is built to work with:
 - [hydrated_bloc](https://pub.dev/packages/hydrated_bloc)
 - [replay_bloc](https://pub.dev/packages/replay_bloc)
 
+---
+
+## Sponsors
+
+Our top sponsors are shown below! [[Become a Sponsor](https://github.com/sponsors/felangel)]
+
+<table>    
+    <tbody>
+        <tr>
+            <td align="center">
+                <a href="https://verygood.ventures"><img src="https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/vgv_logo.png" width="120"/></a>
+            </td>
+            <td align="center">
+                <a href="https://getstream.io/chat/?utm_source=github&utm_medium=bloc-flutter&utm_campaign=oss_sponsorship" target="_blank"><img width="250px" src="https://stream-blog.s3.amazonaws.com/blog/wp-content/uploads/fc148f0fc75d02841d017bb36e14e388/Stream-logo-with-background-.png"/></a><br/><span><a href="https://getstream.io/chat/flutter/tutorial/?utm_source=github&utm_medium=bloc-flutter&utm_campaign=oss_sponsorship" target="_blank">Try the Flutter Chat Tutorial &nbsp💬</a></span>
+            </td>            
+        </tr>
+    </tbody>
+</table>
+
+---
+
 ## Overview
 
 The goal of this package is to make it easy to implement the `BLoC` Design Pattern (Business Logic Component).
@@ -44,7 +65,7 @@ This design pattern helps to separate _presentation_ from _business logic_. Foll
 
 ![Cubit Architecture](https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/cubit_architecture_full.png)
 
-A `Cubit` is the base for `Bloc` (in other words `Bloc` extends `Cubit`). `Cubit` is a special type of `Stream` which can be extended to manage any type of state. `Cubit` requires an initial state which will be the state before `emit` has been called. The current state of a `cubit` can be accessed via the `state` getter and the state of the `cubit` can be updated by calling `emit` with a new `state`.
+A `Cubit` is class which extends `BlocBase` and can be extended to manage any type of state. `Cubit` requires an initial state which will be the state before `emit` has been called. The current state of a `cubit` can be accessed via the `state` getter and the state of the `cubit` can be updated by calling `emit` with a new `state`.
 
 ![Cubit Flow](https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/cubit_flow.png)
 
@@ -117,27 +138,27 @@ class CounterCubit extends Cubit<int> {
 ```dart
 class MyBlocObserver extends BlocObserver {
   @override
-  void onCreate(Cubit cubit) {
-    super.onCreate(cubit);
-    print('onCreate -- cubit: ${cubit.runtimeType}');
+  void onCreate(BlocBase bloc) {
+    super.onCreate(bloc);
+    print('onCreate -- ${bloc.runtimeType}');
   }
 
   @override
-  void onChange(Cubit cubit, Change change) {
-    super.onChange(cubit, change);
-    print('onChange -- cubit: ${cubit.runtimeType}, change: $change');
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    print('onChange -- ${bloc.runtimeType}, $change');
   }
 
   @override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
-    print('onError -- cubit: ${cubit.runtimeType}, error: $error');
-    super.onError(cubit, error, stackTrace);
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    print('onError -- ${bloc.runtimeType}, $error');
+    super.onError(bloc, error, stackTrace);
   }
 
   @override
-  void onClose(Cubit cubit) {
-    super.onClose(cubit);
-    print('onClose -- cubit: ${cubit.runtimeType}');
+  void onClose(BlocBase bloc) {
+    super.onClose(bloc);
+    print('onClose -- ${bloc.runtimeType}');
   }
 }
 ```
@@ -153,7 +174,7 @@ void main() {
 
 ![Bloc Architecture](https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/bloc_architecture_full.png)
 
-A `Bloc` is a more advanced type of `Cubit` which relies on `events` to trigger `state` changes rather than functions. `Bloc` extends `Cubit` which means it has the same public API as `Cubit`. However, rather than calling a `function` on a `Bloc` and directly emitting a new `state`, `Blocs` receive `events` and convert the incoming `events` into outgoing `states`.
+A `Bloc` is a more advanced class which relies on `events` to trigger `state` changes rather than functions. `Bloc` also extends `BlocBase` which means it has a similar public API as `Cubit`. However, rather than calling a `function` on a `Bloc` and directly emitting a new `state`, `Blocs` receive `events` and convert the incoming `events` into outgoing `states`.
 
 ![Bloc Flow](https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/bloc_flow.png)
 
@@ -211,7 +232,7 @@ void main() async {
 
 #### Observing a Bloc
 
-Since all `Blocs` are `Cubits`, `onChange` and `onError` can be overridden in a `Bloc` as well.
+Since all `Blocs` extend `BlocBase` just like `Cubit`, `onChange` and `onError` can be overridden in a `Bloc` as well.
 
 In addition, `Blocs` can also override `onEvent` and `onTransition`.
 
@@ -265,39 +286,39 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 ```dart
 class MyBlocObserver extends BlocObserver {
   @override
-  void onCreate(Cubit cubit) {
-    super.onCreate(cubit);
-    print('onCreate -- cubit: ${cubit.runtimeType}');
+  void onCreate(BlocBase bloc) {
+    super.onCreate(bloc);
+    print('onCreate -- ${bloc.runtimeType}');
   }
 
   @override
-  void onEvent(Bloc bloc, Object event) {
+  void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
-    print('onEvent -- bloc: ${bloc.runtimeType}, event: $event');
+    print('onEvent -- ${bloc.runtimeType}, $event');
   }
 
   @override
-  void onChange(Cubit cubit, Change change) {
-    super.onChange(cubit, change);
-    print('onChange -- cubit: ${cubit.runtimeType}, change: $change');
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    print('onChange -- ${bloc.runtimeType}, $change');
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    print('onTransition -- bloc: ${bloc.runtimeType}, transition: $transition');
+    print('onTransition -- ${bloc.runtimeType}, $transition');
   }
 
   @override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
-    print('onError -- cubit: ${cubit.runtimeType}, error: $error');
-    super.onError(cubit, error, stackTrace);
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    print('onError -- ${bloc.runtimeType}, $error');
+    super.onError(bloc, error, stackTrace);
   }
 
   @override
-  void onClose(Cubit cubit) {
-    super.onClose(cubit);
-    print('onClose -- cubit: ${cubit.runtimeType}');
+  void onClose(BlocBase bloc) {
+    super.onClose(bloc);
+    print('onClose -- ${bloc.runtimeType}');
   }
 }
 ```
@@ -311,7 +332,7 @@ void main() {
 
 ## Dart Versions
 
-- Dart 2: >= 2.6.0
+- Dart 2: >= 2.12
 
 ## Examples
 
@@ -320,7 +341,3 @@ void main() {
 ## Maintainers
 
 - [Felix Angelov](https://github.com/felangel)
-
-## Supporters
-
-[<img src="https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/vgv_logo.png" width="120" />](https://verygood.ventures)

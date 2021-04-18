@@ -6,6 +6,15 @@
 
 ![demo](./assets/gifs/flutter_todos.gif)
 
+## Key Topics
+
+- Observe state changes with [BlocObserver](/coreconcepts?id=blocobserver).
+- [BlocProvider](/flutterbloccoreconcepts?id=blocprovider), Flutter widget which provides a bloc to its children.
+- [BlocBuilder](/flutterbloccoreconcepts?id=blocbuilder), Flutter widget that handles building the widget in response to new states.
+- Using Bloc instead of Cubit. [What's the difference?](/coreconcepts?id=cubit-vs-bloc)
+- Prevent unnecessary rebuilds with [Equatable](/faqs?id=when-to-use-equatable).
+- [MultiBlocProvider](/flutterbloccoreconcepts?id=multiblocprovider), a Flutter widget that merges multiple BlocProvider widgets into one.
+
 ## Setup
 
 We'll start off by creating a brand new Flutter project
@@ -81,7 +90,7 @@ Next, let's implement the events we will need to handle.
 The events we will need to handle in our `TodosBloc` are:
 
 - `TodosLoadSuccess` - tells the bloc that it needs to load the todos from the `TodosRepository`.
-- `TodoAdded` - tells the bloc that it needs to add an new todo to the list of todos.
+- `TodoAdded` - tells the bloc that it needs to add a new todo to the list of todos.
 - `TodoUpdated` - tells the bloc that it needs to update an existing todo.
 - `TodoDeleted` - tells the bloc that it needs to remove an existing todo.
 - `ClearCompleted` - tells the bloc that it needs to remove all completed todos.

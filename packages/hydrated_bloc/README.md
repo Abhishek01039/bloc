@@ -11,7 +11,7 @@
   <a href="https://github.com/Solido/awesome-flutter#standard"><img src="https://img.shields.io/badge/awesome-flutter-blue.svg?longCache=true" alt="Awesome Flutter"></a>
   <a href="https://fluttersamples.com"><img src="https://img.shields.io/badge/flutter-samples-teal.svg?longCache=true" alt="Flutter Samples"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
-  <a href="https://discord.gg/Hc5KD3g"><img src="https://img.shields.io/discord/649708778631200778.svg?logo=discord&color=blue" alt="Discord"></a>
+  <a href="https://discord.gg/bloc"><img src="https://img.shields.io/discord/649708778631200778.svg?logo=discord&color=blue" alt="Discord"></a>
   <a href="https://github.com/felangel/bloc"><img src="https://tinyurl.com/bloc-library" alt="Bloc Library"></a>
 </p>
 
@@ -19,11 +19,32 @@ An extension to [package:bloc](https://github.com/felangel/bloc) which automatic
 
 **Learn more at [bloclibrary.dev](https://bloclibrary.dev)!**
 
+---
+
+## Sponsors
+
+Our top sponsors are shown below! [[Become a Sponsor](https://github.com/sponsors/felangel)]
+
+<table>    
+    <tbody>
+        <tr>
+            <td align="center">
+                <a href="https://verygood.ventures"><img src="https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/vgv_logo.png" width="120"/></a>
+            </td>
+            <td align="center">
+                <a href="https://getstream.io/chat/?utm_source=github&utm_medium=bloc-flutter&utm_campaign=oss_sponsorship" target="_blank"><img width="250px" src="https://stream-blog.s3.amazonaws.com/blog/wp-content/uploads/fc148f0fc75d02841d017bb36e14e388/Stream-logo-with-background-.png"/></a><br/><span><a href="https://getstream.io/chat/flutter/tutorial/?utm_source=github&utm_medium=bloc-flutter&utm_campaign=oss_sponsorship" target="_blank">Try the Flutter Chat Tutorial &nbsp💬</a></span>
+            </td>            
+        </tr>
+    </tbody>
+</table>
+
+---
+
 ## Overview
 
 `hydrated_bloc` exports a `Storage` interface which means it can work with any storage provider. Out of the box, it comes with its own implementation: `HydratedStorage`.
 
-`HydratedStorage` is built on top of [hive](https://pub.dev/packages/hive) for a platform-agnostic, performant storage layer. See the complete [example](https://github.com/felangel/hydrated_bloc/tree/master/example) for more details.
+`HydratedStorage` is built on top of [hive](https://pub.dev/packages/hive) for a platform-agnostic, performant storage layer. See the complete [example](example) for more details.
 
 ## Usage
 
@@ -32,7 +53,9 @@ An extension to [package:bloc](https://github.com/felangel/bloc) which automatic
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  HydratedBloc.storage = await HydratedStorage.build();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getTemporaryDirectory(),
+  );
   runApp(App());
 }
 ```
@@ -100,9 +123,7 @@ class CounterCubit extends Cubit<int> with HydratedMixin {
 
 ## Custom Storage Directory
 
-By default, all data is written to [temporary storage](https://github.com/flutter/plugins/blob/61c39d1e79e8f36030162a5f85fb491c65f4e51c/packages/path_provider/lib/path_provider.dart#L24) which means it can be wiped by the operating system at any point in time.
-
-An optional `storageDirectory` can be provided to override the default temporary storage directory:
+Any `storageDirectory` can be used when creating an instance of `HydratedStorage`:
 
 ```dart
 HydratedBloc.storage = await HydratedStorage.build(
@@ -146,10 +167,10 @@ class MyHydratedStorage implements Storage {
 HydratedBloc.storage = MyHydratedStorage();
 ```
 
+## Dart Versions
+
+- Dart 2: >= 2.12
+
 ## Maintainers
 
 - [Felix Angelov](https://github.com/felangel)
-
-## Supporters
-
-[<img src="https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/vgv_logo.png" width="120" />](https://verygood.ventures)

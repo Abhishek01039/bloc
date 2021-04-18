@@ -12,28 +12,33 @@ class MockCubit<S> extends Cubit<S> {
 
   @override
   StreamSubscription<S> listen(
-    void Function(S p1) onData, {
-    Function onError,
-    void Function() onDone,
-    bool cancelOnError,
+    void Function(S p1)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
   }) {
-    return null;
+    return Stream<S>.empty().listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
   }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({
-    Key key,
-    CounterCubit Function(BuildContext context) create,
-    CounterCubit value,
-    @required Widget child,
-  })  : _create = create,
+    Key? key,
+    CounterCubit Function(BuildContext context)? create,
+    CounterCubit? value,
+    required Widget child,
+  })   : _create = create,
         _value = value,
         _child = child,
         super(key: key);
 
-  final CounterCubit Function(BuildContext context) _create;
-  final CounterCubit _value;
+  final CounterCubit Function(BuildContext context)? _create;
+  final CounterCubit? _value;
   final Widget _child;
 
   @override
@@ -41,14 +46,14 @@ class MyApp extends StatelessWidget {
     if (_value != null) {
       return MaterialApp(
         home: BlocProvider<CounterCubit>.value(
-          value: _value,
+          value: _value!,
           child: _child,
         ),
       );
     }
     return MaterialApp(
       home: BlocProvider<CounterCubit>(
-        create: _create,
+        create: _create!,
         child: _child,
       ),
     );
@@ -57,8 +62,8 @@ class MyApp extends StatelessWidget {
 
 class MyStatefulApp extends StatefulWidget {
   const MyStatefulApp({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   final Widget child;
@@ -68,7 +73,7 @@ class MyStatefulApp extends StatefulWidget {
 }
 
 class _MyStatefulAppState extends State<MyStatefulApp> {
-  CounterCubit cubit;
+  late CounterCubit cubit;
 
   @override
   void initState() {
@@ -108,26 +113,26 @@ class _MyStatefulAppState extends State<MyStatefulApp> {
 }
 
 class MyAppNoProvider extends MaterialApp {
-  const MyAppNoProvider({Key key, Widget home}) : super(key: key, home: home);
+  const MyAppNoProvider({
+    Key? key,
+    required Widget home,
+  }) : super(key: key, home: home);
 }
 
 class CounterPage extends StatelessWidget {
-  const CounterPage({Key key, this.onBuild}) : super(key: key);
+  const CounterPage({Key? key, this.onBuild}) : super(key: key);
 
-  final Function onBuild;
+  final Function? onBuild;
 
   @override
   Widget build(BuildContext context) {
     final counterCubit = BlocProvider.of<CounterCubit>(context);
-    assert(counterCubit != null);
 
     return Scaffold(
       body: BlocBuilder<CounterCubit, int>(
-        cubit: counterCubit,
+        bloc: counterCubit,
         builder: (context, count) {
-          if (onBuild != null) {
-            onBuild();
-          }
+          onBuild?.call();
           return Text('$count', key: const Key('counter_text'));
         },
       ),
@@ -141,8 +146,9 @@ class RoutePage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          RaisedButton(
+          ElevatedButton(
             key: const Key('route_button'),
+            child: const SizedBox(),
             onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute<Widget>(
@@ -151,8 +157,9 @@ class RoutePage extends StatelessWidget {
               );
             },
           ),
-          RaisedButton(
+          ElevatedButton(
             key: const Key('increment_buton'),
+            child: const SizedBox(),
             onPressed: () {
               BlocProvider.of<CounterCubit>(context).increment();
             },
@@ -166,7 +173,7 @@ class RoutePage extends StatelessWidget {
 class CounterCubit extends Cubit<int> {
   CounterCubit({this.onClose}) : super(0);
 
-  final Function onClose;
+  final Function? onClose;
 
   void increment() => emit(state + 1);
   void decrement() => emit(state - 1);
@@ -180,19 +187,6 @@ class CounterCubit extends Cubit<int> {
 
 void main() {
   group('BlocProvider', () {
-    testWidgets('throws if initialized with no create', (tester) async {
-      await tester.pumpWidget(const MyApp(create: null, child: CounterPage()));
-      expect(tester.takeException(), isInstanceOf<AssertionError>());
-    });
-
-    testWidgets('throws if initialized with no child', (tester) async {
-      await tester.pumpWidget(MyApp(
-        create: (context) => CounterCubit(),
-        child: null,
-      ));
-      expect(tester.takeException(), isInstanceOf<AssertionError>());
-    });
-
     testWidgets('lazily loads cubits by default', (tester) async {
       var createCalled = false;
       await tester.pumpWidget(
@@ -267,57 +261,94 @@ void main() {
       expect(counterText.data, '0');
     });
 
-    testWidgets(
-      'passes cubit to children within same build',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider(
-                create: (context) => CounterCubit(),
-                child: BlocBuilder<CounterCubit, int>(
-                  builder: (context, state) => Text('state: $state'),
-                ),
+    testWidgets('passes cubit to children within same build', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider(
+              create: (context) => CounterCubit(),
+              child: BlocBuilder<CounterCubit, int>(
+                builder: (context, state) => Text('state: $state'),
               ),
             ),
           ),
-        );
-        expect(find.text('state: 0'), findsOneWidget);
-      },
-    );
+        ),
+      );
+      expect(find.text('state: 0'), findsOneWidget);
+    });
 
     testWidgets(
-      'can access cubit directly within builder',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
+        'triggers updates in child with context.watch '
+        'when provided bloc instance changes,', (tester) async {
+      const buttonKey = Key('__button__');
+      var cubit = CounterCubit();
+      await tester.pumpWidget(
+        StatefulBuilder(
+          builder: (context, setState) => MaterialApp(
             home: Scaffold(
-              body: BlocProvider(
-                create: (_) => CounterCubit(),
-                child: BlocBuilder<CounterCubit, int>(
-                  builder: (context, state) => Column(
-                    children: [
-                      Text('state: $state'),
-                      RaisedButton(
-                        key: const Key('increment_button'),
-                        onPressed: () {
-                          BlocProvider.of<CounterCubit>(context).increment();
-                        },
-                      ),
-                    ],
-                  ),
+              body: BlocProvider.value(
+                value: cubit,
+                child: Builder(
+                  builder: (context) {
+                    final state = context.watch<CounterCubit>().state;
+                    return GestureDetector(
+                      onTap: () => cubit.increment(),
+                      child: Text('state: $state'),
+                    );
+                  },
+                ),
+              ),
+              floatingActionButton: FloatingActionButton(
+                key: buttonKey,
+                onPressed: () => setState(() => cubit = CounterCubit()),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.text('state: 0'), findsOneWidget);
+
+      cubit.increment();
+      await tester.pump();
+
+      expect(find.text('state: 1'), findsOneWidget);
+
+      await tester.tap(find.byKey(buttonKey));
+      await tester.pump();
+
+      expect(find.text('state: 0'), findsOneWidget);
+    });
+
+    testWidgets('can access cubit directly within builder', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider(
+              create: (_) => CounterCubit(),
+              child: BlocBuilder<CounterCubit, int>(
+                builder: (context, state) => Column(
+                  children: [
+                    Text('state: $state'),
+                    ElevatedButton(
+                      key: const Key('increment_button'),
+                      child: const SizedBox(),
+                      onPressed: () {
+                        BlocProvider.of<CounterCubit>(context).increment();
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-        );
-        expect(find.text('state: 0'), findsOneWidget);
-        await tester.tap(find.byKey(const Key('increment_button')));
-        await tester.pumpAndSettle();
-        expect(tester.takeException(), isNull);
-        expect(find.text('state: 1'), findsOneWidget);
-      },
-    );
+        ),
+      );
+      expect(find.text('state: 0'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('increment_button')));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.text('state: 1'), findsOneWidget);
+    });
 
     testWidgets('does not call close on cubit if it was not loaded (lazily)',
         (tester) async {
@@ -379,7 +410,7 @@ void main() {
       await tester.pumpWidget(const MyAppNoProvider(home: CounterPage()));
       final dynamic exception = tester.takeException();
       final expectedMessage = '''
-        BlocProvider.of() called with a context that does not contain a Bloc/Cubit of type CounterCubit.
+        BlocProvider.of() called with a context that does not contain a CounterCubit.
         No ancestor could be found starting from the context that was passed to BlocProvider.of<CounterCubit>().
 
         This can happen if the context you used comes from a widget above the BlocProvider.
@@ -391,23 +422,49 @@ void main() {
     });
 
     testWidgets(
-        'should not throw FlutterError if internal '
+        'should throw StateError if internal '
         'exception is thrown', (tester) async {
-      final expectedException = Exception('oops');
+      const expected = 'Tried to read a provider that threw '
+          'during the creation of its value.\n'
+          'The exception occurred during the creation of type CounterCubit.';
+      final onError = FlutterError.onError;
+      final flutterErrors = <FlutterErrorDetails>[];
+      FlutterError.onError = flutterErrors.add;
       await tester.pumpWidget(
         BlocProvider<CounterCubit>(
           lazy: false,
-          create: (_) => throw expectedException,
+          create: (_) => throw Exception('oops'),
           child: const SizedBox(),
         ),
       );
-      final dynamic exception = tester.takeException();
-      expect(exception, expectedException);
+
+      expect(
+        flutterErrors,
+        contains(
+          isA<FlutterErrorDetails>().having(
+            (d) => d.exception,
+            'exception',
+            isA<StateError>().having(
+              (e) => e.message,
+              'message',
+              expected,
+            ),
+          ),
+        ),
+      );
+
+      FlutterError.onError = onError;
     });
 
     testWidgets(
-        'should rethrow ProviderNotFound '
+        'should throw StateError '
         'if exception is for different provider', (tester) async {
+      const expected = 'Tried to read a provider that threw '
+          'during the creation of its value.\n'
+          'The exception occurred during the creation of type CounterCubit.';
+      final onError = FlutterError.onError;
+      final flutterErrors = <FlutterErrorDetails>[];
+      FlutterError.onError = flutterErrors.add;
       await tester.pumpWidget(
         BlocProvider<CounterCubit>(
           lazy: false,
@@ -418,8 +475,19 @@ void main() {
           child: const SizedBox(),
         ),
       );
-      final exception = tester.takeException() as ProviderNotFoundException;
-      expect(exception.valueType, int);
+
+      expect(
+        flutterErrors,
+        contains(
+          isA<FlutterErrorDetails>().having(
+            (d) => d.exception,
+            'exception',
+            isA<StateError>().having((e) => e.message, 'message', expected),
+          ),
+        ),
+      );
+
+      FlutterError.onError = onError;
     });
 
     testWidgets(
@@ -433,30 +501,6 @@ void main() {
       await tester.tap(find.byKey(const Key('iconButtonKey')));
       await tester.pump();
       expect(numBuilds, 1);
-    });
-
-    testWidgets('should access cubit instance via context.bloc',
-        (tester) async {
-      const textKey = Key('__text__');
-      await tester.pumpWidget(
-        BlocProvider(
-          create: (_) => CounterCubit(),
-          child: MaterialApp(
-            home: Scaffold(
-              body: Builder(
-                builder: (context) => Text(
-                  // ignore: deprecated_member_use_from_same_package
-                  '${context.bloc<CounterCubit>().state}',
-                  key: textKey,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      final counterText = tester.widget<Text>(find.byKey(textKey));
-      expect(counterText.data, '0');
     });
 
     testWidgets('listen: true registers context as dependent', (tester) async {

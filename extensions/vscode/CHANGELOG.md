@@ -1,3 +1,22 @@
+# 5.6.1
+
+- feat: add snippets for `bloc_test`
+
+# 5.6.0
+
+- feat: freezed classes no longer require [abstract](https://pub.dev/packages/freezed#the-abstract-keyword) keyword when using freezed >= 0.14.0
+- feat: update `BlocObserver` snippets to support null safety and bloc v7.0.0
+- feat: update to latest packages
+  - bloc -> ^7.0.0
+  - bloc_test -> ^8.0.0
+  - equatable -> ^2.0.0
+  - flutter_bloc -> ^7.0.0
+  - hydrated_bloc -> ^7.0.0
+
+# 5.5.1
+
+- feat: improve `context.select` extension snippet
+
 # 5.5.0
 
 - feat: add `checkForUpdates` configuration in extension settings

@@ -6,6 +6,17 @@
 
 ![demo](./assets/gifs/flutter_login.gif)
 
+## Key Topics
+
+- [BlocProvider](/flutterbloccoreconcepts?id=blocprovider), Flutter widget which provides a bloc to its children.
+- [BlocBuilder](/flutterbloccoreconcepts?id=blocbuilder), Flutter widget that handles building the widget in response to new states.
+- Using Cubit instead of Bloc. [What's the difference?](/coreconcepts?id=cubit-vs-bloc)
+- Adding events with [context.read](/migration?id=❗contextbloc-and-contextrepository-are-deprecated-in-favor-of-contextread-and-contextwatch).⚡
+- Prevent unnecessary rebuilds with [Equatable](/faqs?id=when-to-use-equatable).
+- [RepositoryProvider](/flutterbloccoreconcepts?id=repositoryprovider), a Flutter widget which provides a repository to its children.
+- [BlocListener](/flutterbloccoreconcepts?id=bloclistener), a Flutter widget which invokes the listener code in response to state changes in the bloc.
+- Updating the UI based on a part of a bloc state with [context.select](/migration?id=❗contextbloc-and-contextrepository-are-deprecated-in-favor-of-contextread-and-contextwatch).⚡
+
 ## Project Setup
 
 We'll start off by creating a brand new Flutter project
@@ -240,7 +251,7 @@ lib
 
 ### Login Models
 
-We are using [package:formz](https://pub.dev/packages/formz) to create reusable and standard models the the `username` and `password`.
+We are using [package:formz](https://pub.dev/packages/formz) to create reusable and standard models for the `username` and `password`.
 
 #### Username
 
@@ -302,7 +313,7 @@ Next let's take a look at the `LoginPage` and `LoginForm`.
 
 [login_page.dart](https://raw.githubusercontent.com/felangel/bloc/master/examples/flutter_login/lib/login/view/login_page.dart ':include')
 
-?> **Note**: `context.read` is used to lookup the instance of `AuthenticationRepository` via the `BuildContext`.
+?> **Note**: `RepositoryProvider.of<AuthenticationRepository>(context)` is used to lookup the instance of `AuthenticationRepository` via the `BuildContext`.
 
 ### Login Form
 

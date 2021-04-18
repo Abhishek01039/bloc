@@ -11,7 +11,7 @@
 <a href="https://github.com/Solido/awesome-flutter#standard"><img src="https://img.shields.io/badge/awesome-flutter-blue.svg?longCache=true" alt="Awesome Flutter"></a>
 <a href="http://fluttersamples.com"><img src="https://img.shields.io/badge/flutter-samples-teal.svg?longCache=true" alt="Flutter Samples"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
-<a href="https://discord.gg/Hc5KD3g"><img src="https://img.shields.io/discord/649708778631200778.svg?logo=discord&color=blue" alt="Discord"></a>
+<a href="https://discord.gg/bloc"><img src="https://img.shields.io/discord/649708778631200778.svg?logo=discord&color=blue" alt="Discord"></a>
 <a href="https://github.com/felangel/bloc"><img src="https://tinyurl.com/bloc-library" alt="Bloc Library"></a>
 </p>
 
@@ -27,6 +27,27 @@ A predictable state management library that helps implement the [BLoC design pat
 | [angular_bloc](https://github.com/felangel/bloc/tree/master/packages/angular_bloc)   | [![pub package](https://img.shields.io/pub/v/angular_bloc.svg)](https://pub.dev/packages/angular_bloc)   |
 | [hydrated_bloc](https://github.com/felangel/bloc/tree/master/packages/hydrated_bloc) | [![pub package](https://img.shields.io/pub/v/hydrated_bloc.svg)](https://pub.dev/packages/hydrated_bloc) |
 | [replay_bloc](https://github.com/felangel/bloc/tree/master/packages/replay_bloc)     | [![pub package](https://img.shields.io/pub/v/replay_bloc.svg)](https://pub.dev/packages/replay_bloc)     |
+
+---
+
+## Sponsors
+
+Our top sponsors are shown below! [[Become a Sponsor](https://github.com/sponsors/felangel)]
+
+<table>    
+    <tbody>
+        <tr>
+            <td align="center">
+                <a href="https://verygood.ventures"><img src="https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/vgv_logo.png" width="120"/></a>
+            </td>
+            <td align="center">
+                <a href="https://getstream.io/chat/?utm_source=github&utm_medium=bloc-flutter&utm_campaign=oss_sponsorship" target="_blank"><img width="250px" src="https://stream-blog.s3.amazonaws.com/blog/wp-content/uploads/fc148f0fc75d02841d017bb36e14e388/Stream-logo-with-background-.png"/></a><br/><span><a href="https://getstream.io/chat/flutter/tutorial/?utm_source=github&utm_medium=bloc-flutter&utm_campaign=oss_sponsorship" target="_blank">Try the Flutter Chat Tutorial &nbsp💬</a></span>
+            </td>            
+        </tr>
+    </tbody>
+</table>
+
+---
 
 ## Overview
 
@@ -110,7 +131,7 @@ The goal of this library is to make it easy to separate _presentation_ from _bus
 - [Dynamic Form](https://github.com/felangel/bloc/tree/master/examples/flutter_dynamic_form) - an example of how to use the `bloc` and `flutter_bloc` packages to implement a dynamic form which pulls data from a repository.
 - [Wizard](https://github.com/felangel/bloc/tree/master/examples/flutter_wizard) - an example of how to build a multi-step wizard using the `bloc` and `flutter_bloc` packages.
 - [GraphQL](https://github.com/felangel/bloc/tree/master/examples/flutter_graphql_jobs) - an example of how to use the `bloc` and `flutter_bloc` packages with `graphql` to retrieve data from [api.graphql.jobs](https://api.graphql.jobs).
-- [Fluttersaurus](https://github.com/felangel/fluttersaurus) - an example of how to use the `bloc` and `flutter_bloc` packages to create a thesuarus app -- made for Bytconf Flutter 2020.
+- [Fluttersaurus](https://github.com/felangel/fluttersaurus) - an example of how to use the `bloc` and `flutter_bloc` packages to create a thesaurus app -- made for Bytconf Flutter 2020.
 
 ### Web
 
@@ -136,7 +157,7 @@ The goal of this library is to make it easy to separate _presentation_ from _bus
 
 ## Books
 
-  - [Flutter Complete Reference](https://fluttercompletereference.com/) - A book about the Dart programming language (version 2.10, with null safety support) and the Flutter framework (version 1.20). It covers the bloc package (version 6.0.3) in all flavors: bloc, flutter_bloc hydrated_bloc, replay_bloc, bloc_test and cubit.
+- [Flutter Complete Reference](https://fluttercompletereference.com/) - A book about the Dart programming language (version 2.10, with null safety support) and the Flutter framework (version 1.20). It covers the bloc package (version 6.0.3) in all flavors: bloc, flutter_bloc hydrated_bloc, replay_bloc, bloc_test and cubit.
 
 ## Extensions
 
@@ -180,7 +201,3 @@ Learn more at the following links, which have been contributed by the community.
 ## Maintainers
 
 - [Felix Angelov](https://github.com/felangel)
-
-## Supporters
-
-[<img src="https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/vgv_logo.png" width="120" />](https://verygood.ventures)

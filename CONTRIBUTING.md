@@ -50,7 +50,7 @@ that your changes look good by running the docs locally.
 cd ./docs
 
 # run a local http server on port 8080
-python -m SimpleHTTPServer 8080 .
+python -m http.server 8080 .
 
 # navigate to http://localhost:8080
 ```
@@ -114,7 +114,7 @@ step.
 ## Getting in Touch
 
 If you want to just ask a question or get feedback on an idea you can post it
-on [Discord](https://discord.gg/Hc5KD3g).
+on [Discord](https://discord.gg/bloc).
 
 ## License
 
